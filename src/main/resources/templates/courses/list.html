@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/userfragment :: common_head('Courses')}"></head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">My App</a>
+        <div class="d-flex">
+            <a th:href="@{/home}" class="btn btn-outline-light btn-sm me-2">Home</a>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Courses</h2>
+        <a th:href="@{/courses/new}" class="btn btn-success">+ Add Course</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Duration (hrs)</th>
+                    <th>Fee</th>
+                    <th>Description</th>
+                    <th>image </th>
+                    <th style="width: 140px;">Actions</th>
+                    <th>course Feedback</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="course, stat : ${courses}">
+                    <td th:text="${stat.index + 1}">1</td>
+                    <td th:text="${course.title}">Title</td>
+                    <td th:text="${course.durationHours}">10</td>
+                    <td th:text="${course.fee}">1000</td>
+                    <td th:text="${course.description}">Desc</td>
+					<td>
+					    <img th:if="${course.imagesCloudnary != null}"
+					         th:src="@{${course.imagesCloudnary.filePath}}"
+					         width="80"
+					         height="80"/>
+					
+					    <span th:if="${course.imagesCloudnary == null}">
+					        No Image
+					    </span>
+					</td>
+
+
+                    <td>
+                        <a th:href="@{|/courses/edit/${course.id}|}"
+                           class="btn btn-sm btn-primary me-1">Edit</a>
+                        <a th:href="@{|/courses/delete/${course.id}|}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Delete this course?');">
+                            Delete
+                        </a>
+                    </td>
+                
+                      
+                      <td>
+						    <a th:href="@{|/course/${course.id}/feedbacks|}"
+						       class="btn btn-sm btn-primary me-1">
+						        Feedback Show
+						    </a>
+						</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(courses)}">
+                    <td colspan="6" class="text-center text-muted py-3">
+                        No courses found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/userfragment :: common_scripts}"></th:block>
+</body>
+</html>
