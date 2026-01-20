@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/userfragment :: common_head('ViewFeedBack')}"></head>
+
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container">
+			<a class="navbar-brand" href="#">My App</a>
+			<div class="d-flex">
+				<a th:href="@{/home}" class="btn btn-outline-light btn-sm me-2">Home</a>
+				<a th:href="@{/courses}" class="btn btn-outline-light btn-sm">Course Manage</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container mt-4">
+
+		<h3 class="text-center mb-4">Course Feedback List</h3>
+
+		<!-- No feedback -->
+		<div th:if="${feedbacks.size() == 0}" class="alert alert-warning">
+			No feedback available for this course
+		</div>
+
+		<!-- Feedback table -->
+		<table class="table table-bordered table-striped" th:if="${feedbacks.size() > 0}">
+			<thead class="table-dark">
+				<tr>
+					<th>User Name</th>
+					<th>Rating</th>
+					<th>Comment</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="fb : ${feedbacks}">
+					<td th:text="${fb.userFeedBack.name}"></td>
+
+					<td>
+						⭐ <span th:text="${fb.rating}"></span> / 5
+					</td>
+
+					<td th:text="${fb.comment}"></td>
+
+					<!-- Admin ( Delete  and  Edit ) -->
+					<td>
+						<a class="btn btn-danger btn-sm" th:href="@{/feedback/delete/{feedbackId}/{courseId}(
+                   feedbackId=${fb.id}, courseId=${courseId})}"
+							onclick="return confirm('Are you sure want to delete this feedback?')">
+							Delete
+						</a>
+						
+						<a class="btn btn-danger btn-sm" th:href="@{/feedback/edit/{feedbackId}/{courseId}/{userId}(
+                   feedbackId=${fb.id}, courseId=${courseId}, userId=${fb.userFeedBack.id})}"
+							onclick="return confirm('Are you sure want to edit this feedback?')">
+							Edit
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<th:block th:replace="~{fragments/userfragment :: common_scripts}"></th:block>
+</body>
+
+</html>

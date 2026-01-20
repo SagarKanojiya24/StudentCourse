@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/userfragment :: common_head('Course Details')}"></head>
+<body class="bg-light">
+<div class="container mt-5">
+
+    <div class="card shadow-lg">
+
+        <!-- ================= COURSE BASIC DETAILS ================= -->
+        <div class="card-header bg-primary text-white">
+            <h3 th:text="${course.title}">Course Title</h3>
+        </div>
+        
+        <!-- ================= COURSE IMAGE ================= -->
+		<div class="text-center mt-3"
+		     th:if="${course.imagesCloudnary != null}">
+		
+		    <img th:src="${course.imagesCloudnary.filePath}"
+		         alt="Course Image"
+		         class="img-fluid rounded shadow"
+		         style="max-height:300px;">
+		</div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Duration:</strong>
+                    <span th:text="${course.durationHours}"></span> hours
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Fee:</strong>
+                    ₹ <span th:text="${course.fee}"></span>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- ================= COURSE DESCRIPTION ================= -->
+            <h5>Course Description</h5>
+            <p th:text="${course.description}">
+                Course description here
+            </p>
+
+            <hr>
+
+            <!-- ================= COURSE OVERVIEW ================= -->
+            <h5>Overview</h5>
+            <p th:text="${content.overview}">
+                Course overview here
+            </p>
+
+            <hr>
+
+            <!-- ================= COURSE SYLLABUS ================= -->
+            <h5>Course Syllabus</h5>
+            <p th:text="${content.syllabus}"></p>
+
+            <hr>
+
+            <!-- ================= VIDEO SECTION ================= -->
+            <h5>Video Tutorial</h5>
+            <a th:href="${content.youtubeUrl}"
+               target="_blank"
+               class="btn btn-danger">
+               ▶ Watch on YouTube
+            </a>
+
+            <hr>
+
+            <!-- ================= RESOURCES ================= -->
+            <h5>Resources</h5>
+            <a th:href="${content.resourceLink}"
+               target="_blank"
+               class="btn btn-info">
+               📄 Download Resources
+            </a>
+
+        </div>
+
+        <!-- ================= FOOTER ================= -->
+        <div class="card-footer text-end">
+            <a th:href="@{/home}"
+               class="btn btn-secondary">
+                ← Back to My Courses
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+	<th:block th:replace="~{fragments/userfragment :: common_scripts}"></th:block>
+</body>
+</html>

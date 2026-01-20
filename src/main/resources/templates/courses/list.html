@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/userfragment :: common_head('Courses')}"></head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">My App</a>
+        <div class="d-flex">
+            <a th:href="@{/home}" class="btn btn-outline-light btn-sm me-2">Home</a>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- =================  COURSES   ADD / Edit/ Delete  (ONLY ADMIN ROLE) ================= -->
+
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Courses</h2>
+        <a th:href="@{/courses/new}" class="btn btn-success">+ Add Course</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Duration (hrs)</th>
+                    <th>Fee</th>
+                    <th>Description</th>
+                    <th>image </th>
+                    <th style="width: 140px;">Actions</th>
+                    <th>course Feedback</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="course, stat : ${courses}">
+                    <td th:text="${stat.index + 1}">1</td>
+                    <td th:text="${course.title}">Title</td>
+                    <td th:text="${course.durationHours}">10</td>
+                    <td th:text="${course.fee}">1000</td>
+                    <td th:text="${course.description}">Desc</td>
+					<td>
+					    <img th:if="${course.imagesCloudnary != null}"
+					         th:src="@{${course.imagesCloudnary.filePath}}"
+					         width="80"
+					         height="80"/>
+					
+					    <span th:if="${course.imagesCloudnary == null}">
+					        No Image
+					    </span>
+					</td>
+
+
+                   <td >
+					    <a th:href="@{|/courses/edit/${course.id}|}"
+					       class="btn btn-sm btn-primary">
+					        Edit
+					    </a>
+					
+					    <a th:href="@{|/courses/delete/${course.id}|}"
+					       class="btn btn-sm btn-danger"
+					       onclick="return confirm('Delete this course?');">
+					        Delete
+					    </a>
+					
+					    <a th:if="${#lists.contains(availableCourses.![id], course.id)}"
+					       th:href="@{|/course-content/add/${course.id}|}"
+					       class="btn btn-sm btn-primary">
+					        Add Content
+					    </a>
+
+						<!--   or (Ya) -->
+	<!--  						
+						<a th:if="${availableCourseIds.contains(course.id)}"
+						   th:href="@{|/course-content/add/${course.id}|}"
+						   class="btn btn-sm btn-primary me-1">
+						    Add Content of Course
+						</a>
+	-->				
+                    </td>
+                
+                      
+                      <td>
+						    <a th:href="@{|/course/${course.id}/feedbacks|}"
+						       class="btn btn-sm btn-primary me-1">
+						        Feedback Show
+						    </a>
+						</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(courses)}">
+                    <td colspan="6" class="text-center text-muted py-3">
+                        No courses found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+  <!-- =================  COURSES   Content  ADD / Edit/ Delete  (ONLY ADMIN ROLE) ================= -->
+  
+  
+  
+  <div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Course Contents</h2>
+        <a th:href="@{/course-content/add}" class="btn btn-success">
+            + Add Content
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Course Title</th>
+                    <th>Overview</th>
+                    <th>YouTube</th>
+                    <th>Syllabus</th>
+                    <th>Resource</th>
+                    <th style="width:160px;">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="content, stat : ${contents}">
+                    <td th:text="${stat.index + 1}">1</td>
+
+                    <td th:text="${content.course.title}">
+                        Java Course
+                    </td>
+
+                    <td th:text="${#strings.abbreviate(content.overview, 50)}">
+                        Overview
+                    </td>
+
+                    <td>
+                        <a th:if="${content.youtubeUrl != null}"
+                           th:href="${content.youtubeUrl}"
+                           target="_blank"
+                           class="btn btn-sm btn-danger">
+                            Watch
+                        </a>
+
+                        <span th:if="${content.youtubeUrl == null}">
+                            N/A
+                        </span>
+                    </td>
+
+                    <td th:text="${#strings.abbreviate(content.syllabus, 40)}">
+                        Syllabus
+                    </td>
+
+                    <td>
+                        <a th:if="${content.resourceLink != null}"
+                           th:href="${content.resourceLink}"
+                           target="_blank"
+                           class="btn btn-sm btn-secondary">
+                            Open
+                        </a>
+
+                        <span th:if="${content.resourceLink == null}">
+                            N/A
+                        </span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{|/course-content/edit/${content.id}|}"
+                           class="btn btn-sm btn-primary me-1">
+                            Edit
+                        </a>
+
+                        <a th:href="@{|/course-content/delete/${content.id}|}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Delete this content?');">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(contents)}">
+                    <td colspan="7"
+                        class="text-center text-muted py-3">
+                        No course content found.
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+  
+ <!-- ================================================================================================================ -->
+  
+  
+
+<th:block th:replace="~{fragments/userfragment :: common_scripts}"></th:block>
+</body>
+</html>

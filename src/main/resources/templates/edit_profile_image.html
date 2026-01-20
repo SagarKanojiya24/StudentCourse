@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Edit Profile Image</title>
+
+	<!-- External CSS -->
+	<link rel="stylesheet" th:href="@{/css/profile-image.css}">
+</head>
+
+<body>
+
+	<div class="page-wrapper">
+		<div class="card">
+
+			<h2 class="title">Edit Profile Image</h2>
+
+			<form th:action="@{/edit-profile-image}" method="post" enctype="multipart/form-data">
+
+				<div class="form-group">
+					<label>Select Image</label>
+					<input type="file" name="imagelocalupload" accept="image/*" required>
+				</div>
+
+				<button type="submit" class="btn-primary">
+					Update Image
+				</button>
+
+				<a th:href="@{/home}" class="btn-secondary">
+					Cancel
+				</a>
+
+			</form>
+		</div>
+	</div>
+
+</body>
+
+</html>

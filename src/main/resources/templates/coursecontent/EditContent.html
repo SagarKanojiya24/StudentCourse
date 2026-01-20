@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/userfragment :: common_head('Edit Content Details')}"></head>
+
+<body class="bg-light">
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-warning text-dark text-center">
+                    <h5 class="mb-0">Edit Course Content</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form th:action="@{/course-content/update/{id}(id=${content.id})}"
+                          th:object="${content}"
+                          method="post">
+
+                        <!-- Overview -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Overview</label>
+                            <textarea class="form-control"
+                                      th:field="*{overview}"
+                                      rows="3"></textarea>
+                        </div>
+
+                        <!-- YouTube URL -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">YouTube URL</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{youtubeUrl}">
+                        </div>
+
+                        <!-- Syllabus -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Syllabus</label>
+                            <textarea class="form-control"
+                                      th:field="*{syllabus}"
+                                      rows="4"></textarea>
+                        </div>
+
+                        <!-- Resource Link -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Resource Link</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{resourceLink}">
+                        </div>
+
+                        <!-- Update Button -->
+                        <div class="d-grid">
+                            <button type="submit"
+                                    class="btn btn-warning btn-lg text-dark">
+                                Update
+                            </button>
+                        </div>
+                        
+                         <!-- Cancel  -->
+                        <div class="d-grid">                            
+								<a th:href="@{/courses}" class="btn btn-secondary">Cancel</a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

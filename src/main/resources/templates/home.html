@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/userfragment :: common_head('Home')}"></head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">My App</a>
+
+        <!-- ADMIN button -->
+        <div class="d-flex">
+            <a th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'ADMIN'}"
+               th:href="@{/courses}" class="btn btn-light btn-sm me-2">
+                Manage Courses
+            </a>
+
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <!-- ================= USER PROFILE CARD ================= -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 text-center">
+
+                    <!-- USER IMAGE -->
+                    <div class="mb-3">
+
+                        <!-- Image available -->
+                        <img th:if="${user.images != null}"
+                             th:src="${user.images.filePath}"
+                             class="rounded-circle border"
+                             style="width:120px;height:120px;object-fit:cover;"
+                             alt="Profile Image">
+
+                        <!-- Image not available -->
+                        <div th:if="${user.images == null}"
+                             class="rounded-circle border d-flex align-items-center justify-content-center bg-secondary text-white mx-auto"
+                             style="width:120px;height:120px;font-size:40px;font-weight:600;">
+                            <span th:text="${#strings.substring(user.name,0,1)}">U</span>
+                        </div>
+                    </div>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="mb-3">
+                        <a th:href="@{/edit-profile-image}"
+                           class="btn btn-warning btn-sm">
+                            Edit Profile Image
+                        </a>
+
+                        <form th:action="@{/delete-profile-image}"
+                              method="post"
+                              th:if="${user.images != null}"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm ms-2">
+                                Delete Photo
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- USER INFO -->
+                    <h4 class="mb-1">
+                        Welcome,
+                        <span th:text="${user.name}">User</span>
+                    </h4>
+
+                    <p class="text-muted mb-3">
+                        Logged in as
+                        <strong th:text="${user.email}">email@example.com</strong>
+                    </p>
+
+                    <a th:href="@{/logout}" class="btn btn-secondary btn-sm">
+                        Logout
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= USER COURSES (ONLY USER ROLE) ================= -->
+    <div th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'USER'}"
+         class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Duration (hrs)</th>
+                            <th>Fee</th>
+                            <th>Description</th>
+                            <th style="width:140px;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="course, stat : ${courses}">
+                            <td th:text="${stat.index + 1}">1</td>
+                            <td th:text="${course.title}">Title</td>
+                            <td th:text="${course.durationHours}">10</td>
+                            <td th:text="${course.fee}">1000</td>
+                            <td th:text="${course.description}">Desc</td>
+                            <td>
+							     <div style="display:flex; gap:8px; flex-wrap:wrap;">
+							     
+								     <!-- BUY -->
+							        <form th:if="${!courseBuyMap[course.id]}"
+							              th:action="@{/fromUserCourse/buy/{id}(id=${course.id})}"
+							              method="post">
+							            <button class="btn btn-success btn-sm">
+							                Buy Course
+							            </button>
+							        </form>
+							
+							        <!-- VIEW (ONLY IF BOUGHT) -->
+							        <a th:if="${courseBuyMap[course.id]}"
+							           th:href="@{/fromUserCourse/details/{id}(id=${course.id})}"
+							           class="btn btn-primary btn-sm">
+							            View Course
+							        </a>
+							
+							       <!-- FEEDBACK LOGIC (tumhara existing) -->
+							        <a th:if="${courseBuyMap[course.id] and !courseFeedbackMap[course.id]}"
+							           th:href="@{/givefeedbackForm/{id}(id=${course.id})}"
+							           class="btn btn-success btn-sm">
+							            Give Feedback
+							        </a>
+							        
+							
+							        <a th:if="${courseFeedbackMap[course.id]}"
+							           th:href="@{/editfeedbackForm/{id}(id=${course.id})}"
+							           class="btn btn-warning btn-sm">
+							            Edit Feedback
+							        </a>
+														
+							        <form th:action="@{/deleteFeedbackForm/{id}(id=${course.id})}"
+							              method="post"
+							              th:if="${courseFeedbackMap[course.id]}"
+							              style="margin:0;">
+							            <button type="submit"
+							                    style="
+							                        padding:6px 10px;
+							                        background:#dc3545;
+							                        color:white;
+							                        border:none;
+							                        border-radius:4px;
+							                        font-size:13px;
+							                        cursor:pointer;
+							                    ">
+							                Delete Feedback
+							            </button>
+							        </form>
+							
+							    </div>
+							</td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(courses)}">
+                            <td colspan="6" class="text-center text-muted py-3">
+                                No courses found.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block th:replace="~{fragments/userfragment :: common_scripts}"></th:block>
+</body>
+</html>

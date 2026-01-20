@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Edit Feedback Form</title>
+</head>
+
+<body>
+
+	<h2>Course: <span th:text="${course.title}"></span></h2>
+
+	<form th:action="@{/submitFeedback}" th:object="${feedback}" method="post">
+
+		<input type="hidden" name="courseId" th:value="${course.id}" />
+
+		Rating:
+		<select th:field="*{rating}">
+			<option value="5">5 - Excellent</option>
+			<option value="4">4 - Good</option>
+			<option value="3">3 - Average</option>
+			<option value="2">2 - Bad</option>
+			<option value="1">1 - Very Bad</option>
+		</select>
+		<div th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" style="color:red"></div>
+		<br><br>
+
+		Comment:
+		<textarea th:field="*{comment}"></textarea>
+		<div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" style="color:red"></div>
+
+
+		<br><br>
+
+		<button type="submit">Give Feedback</button>
+
+	</form>
+
+</body>
+
+</html>
