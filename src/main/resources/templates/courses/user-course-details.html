@@ -46,6 +46,9 @@
 
             <hr>
 
+
+			<div th:if="${content != null}">
+			
             <!-- ================= COURSE OVERVIEW ================= -->
             <h5>Overview</h5>
             <p th:text="${content.overview}">
@@ -79,6 +82,11 @@
             </a>
 
         </div>
+
+			 <!-- Agar content nahi mila -->
+		<div th:if="${content == null}" class="alert alert-warning text-center">
+		     Content not available for this course
+		</div>
 
         <!-- ================= FOOTER ================= -->
         <div class="card-footer text-end">
